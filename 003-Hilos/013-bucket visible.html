@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+<head>
+  <style>
+    #contienecanvas{
+      position:relative;
+    }
+    canvas{
+      position:absolute;
+      top:0px;
+      left:0px;
+    }
+  </style>
+</head>
+  <body> 
+  <button id="comenzar">Comenzar</button>
+  <select id="tamanio">
+    <option value="4">4</option>
+    <option value="8">8</option>
+    <option value="16">16</option>
+    <option value="32">32</option>
+    <option value="64">64</option>
+    <option value="128">128</option>
+    <option value="256">256</option>
+  </select>
+    <div id="contienecanvas">
+      <canvas id="lienzo1"></canvas>
+      <canvas id="lienzo2"></canvas>
+    </div>
+    <script>
+        /*/////////////////////////////// DECLARACIÓN DE VARIABLES GLOBALES ////////////////////////////////////*/
+        
+        var x;                                                   // Declaro una variable global x
+        var y;                                                   // Declaro una variable global y
+        var bucket;                                              // Declaro una variable bucket que define la anchura del bloque
+        
+        /*/////////////////////////////// DECLARACIÓN DE VARIABLES GLOBALES ////////////////////////////////////*/
+        
+        /*/////////////////////////////// DECLARACIÓN DE LIENZO Y PROPIEDADES INICIALES DE IMAGEN ////////////////////////////////////*/
+        
+        const lienzo = document.querySelector("#lienzo1")       // Selecciono el lienzo
+        lienzo.width = 1024                                     // Le pongo 1024 pixeles de anchura
+        lienzo.height = 1024                                    // Le pongo 1024 pixeles de altura
+        const contexto = lienzo.getContext("2d")                // Creo un contexto para dibujar en 2d
+        
+        const lienzo2 = document.querySelector("#lienzo2")       // Selecciono el lienzo
+        lienzo2.width = 1024                                     // Le pongo 1024 pixeles de anchura
+        lienzo2.height = 1024                                    // Le pongo 1024 pixeles de altura
+        const contexto2 = lienzo2.getContext("2d")                // Creo un contexto para dibujar en 2d
+        
+        var imagen = new Image()                                // Creo una nueva imagen
+        imagen.src = "imagenoriginal.jpg";                                // Le pongo una imagen real
+        imagen.onload = function(){                             // Solo cuando esa imagen haya cargado en memoria
+          contexto.drawImage(imagen,0,0)                        // Pinto la imagen
+          
+          x = 0;                                                // Inicialmente la X es 0
+          y = 0;                                                // inicialmente la y es 0
+          
+        }
+        document.getElementById("comenzar").onclick = function(){
+          bucket = parseInt(document.getElementById("tamanio").value)                                         // Establezco la anchura inicial del bucket
+          trabajaMucho()                                        // Llamo a una primera ejecución de la funcion
+        }
+        /*/////////////////////////////// DECLARACIÓN DE LIENZO Y PROPIEDADES INICIALES DE IMAGEN ////////////////////////////////////*/
+        
+        function trabajaMucho(){
+          
+          contexto2.clearRect(0,0,1024,1024)
+          contexto2.strokeStyle = "red"
+          contexto2.lineWidth = 6
+          contexto2.beginPath()
+          contexto2.strokeRect(x,y,bucket,bucket)
+          contexto2.stroke()
+        
+          datos1 = contexto.getImageData(x,y,bucket,bucket)     // Leo la primera cuarta parte en vertical de la imagen de la imagen 
+          var trabajador = new Worker("013-worker.js");         // Creo una nueva instancia de un worker y lo pongo en el identificador llamado trabajador
+          trabajador.postMessage(datos1.data)                   // tomo los datos y se los envío al worker
+          
+          ///////////////////////////////////////////////////// Y ahora me olvido porque yo ya le he enviado los datos al trabajador, y ya si eso el trabajador me dirá algo
+          
+          trabajador.onmessage = function(misdatos){            // Cuando el trabajador finaliza me devuelve un mensaje
+            for(let i = 0;i<datos1.data.length;i++){            // tomo el array de datos que me da el worker
+              datos1.data[i] = misdatos.data[i]                 // Lo vuelco al array de datos de la imagen porque yo lo que quiero al final es una imagen
+            }
+            contexto.putImageData(datos1,x-bucket,y)            // Esa imagen que he construido con los datos que me da el worker, pues la pongo en el canvas         
+           }
+           x+=bucket;                                           // Una vez que he calculado, paso al cuadro siguiente aumentando la x
+           if(x > 1024){                                        // en el caso de que la x llegue al final
+            x = 0;                                              // Devuelvo la x a cero, lo que quiere decir que vuelvo a empezar por la izquierda
+            y += bucket                                         // Pero bajo a la fila de bajo
+           }
+           if(x < 1100 && y < 1100){                            // Si ya he llegado al final en x y en Y
+             setTimeout(function(){                             // Espera un momento porque si no la ejecucion se cuelga
+                 trabajaMucho()                                 // Haz una llamada recursiva a esta misma funcion
+             },100)                                             // Dentro de X milisegundos
+           }
+          
+        }
+    </script>
+  </body>
+</html>

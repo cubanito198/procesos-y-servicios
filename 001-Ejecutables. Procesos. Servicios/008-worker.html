@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+  <body>
+    <script>
+      
+      const navegador = navigator;        // Instancio el objeto navigator
+      console.log(navegador);             // Lo saco por consola
+      const nucleos = navegador.hardwareConcurrency // Saco el número de núcleos
+      console.log("Tu ordenador tiene",nucleos,"núcleos")
+      let trabajadores = [];                          // Creo un array
+      let numerotrabajadores = 12;                    // Especifico cuantos workers quiero
+      
+      for(let w = 0;w<numerotrabajadores;w++){        // Creo un for para crear tantos trabajadores como necesite
+        trabajadores[w] = new Worker("008-worker.js");   // Creo una instancia de Worker
+        trabajadores[w].postMessage(w);                 // Le envío un mensaje 
+        trabajadores[w].onmessage = function(e){            // Cuando el worker me devuelve un mensaje
+          //console.log("El worker me ha devuelto un mensaje")  // Digo algo por consola
+          //console.log("Y el worker dice:",e.data)             // Soy capaz de comunicarme con el worker
+        }
+      }
+      
+      
+      
+      
+    </script>
+  </body>
+</html>

@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+  <body>
+    <canvas id="lienzo1"></canvas>
+    <script>
+        const tiempoinicio = new Date()
+        const epochinicio = tiempoinicio.getTime()
+        const lienzo = document.querySelector("#lienzo1")       // Selecciono el lienzo
+        lienzo.width = 6000                                     // Le pongo 6000 pixeles de anchura
+        lienzo.height = 4000                                    // Le pongo 4000 pixeles de altura
+        const contexto = lienzo.getContext("2d")                // Creo un contexto para dibujar en 2d
+        var imagen = new Image()                                // Creo una nueva imagen
+        imagen.src = "foto.JPG";                                // Le pongo una imagen real
+        imagen.onload = function(){                             // Solo cuando esa imagen haya cargado en memoria
+          contexto.drawImage(imagen,0,0)                        // Pinto la imagen
+          var datos = contexto.getImageData(0,0,6000,4000)      // Leo los datos a la memoria
+          for(let i = 0;i<datos.data.length;i+=4){              // Recorro cada pixel
+            let c = datos.data                                  // Cargo los datos de ese pixel
+            let gris = Math.round((c[i] + c[i+1] + c[i+2])/3)   // Saco el promedio
+            datos.data[i] = gris;                               // actualizo el color rojo para que sea gris
+            datos.data[i+1] = gris;                             // actualizo el color verde para que sea gris
+            datos.data[i+2] = gris;                             // actualizo el color azul para que sea gris
+          }
+          contexto.putImageData(datos,0,0)                      // Pego los datos en una imagen en el canvas
+          const tiempofinal = new Date()
+          const epochfinal = tiempofinal.getTime()
+          const resta = epochfinal - epochinicio;
+          console.log("Esta operacion tarda en hacerse",resta,"milisegundos")
+        }
+    </script>
+  </body>
+</html>

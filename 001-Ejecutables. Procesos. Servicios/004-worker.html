@@ -1,0 +1,18 @@
+<!doctype html>
+<html>
+  <body>
+    <script>
+      
+      const navegador = navigator;        // Instancio el objeto navigator
+      console.log(navegador);             // Lo saco por consola
+      const nucleos = navegador.hardwareConcurrency // Saco el número de núcleos
+      console.log("Tu ordenador tiene",nucleos,"núcleos")
+      
+      let trabajador = new Worker("004-worker.js");   // Creo una instancia de Worker
+      trabajador.postMessage("hola");                 // Le envío un mensaje 
+      
+      
+      
+    </script>
+  </body>
+</html>
