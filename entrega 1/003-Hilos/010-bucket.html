@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+  <body>
+    <canvas id="lienzo1"></canvas>
+    <script>
+       var x;
+       var y;
+       var bucket;
+        const lienzo = document.querySelector("#lienzo1")       // Selecciono el lienzo
+        lienzo.width = 1024                                     // Le pongo 1024 pixeles de anchura
+        lienzo.height = 1024                                    // Le pongo 1024 pixeles de altura
+        const contexto = lienzo.getContext("2d", { willReadFrequently: true });                 // Creo un contexto para dibujar en 2d
+        var imagen = new Image()                                // Creo una nueva imagen
+        imagen.src = "imagenoriginal.jpg";                                // Le pongo una imagen real
+        imagen.onload = function(){                             // Solo cuando esa imagen haya cargado en memoria
+          contexto.drawImage(imagen,0,0)                        // Pinto la imagen
+          
+          bucket = 64
+          x = 0;
+          y = 0;
+               
+          trabajaMucho()
+ 
+        }
+        
+        function trabajaMucho(){
+          datos1 = contexto.getImageData(x,y,bucket,bucket)        // Leo la primera cuarta parte en vertical de la imagen de la imagen (cargo  con una cuarta parte de lo que cargaba antes)
+          var trabajador = new Worker("009-worker.js");         // Creo una nueva instancia de un worker y lo pongo en el identificador llamado trabajador
+          trabajador.postMessage(datos1.data)                   // tomo los datos y se los envío al worker
+          ///////////////////////////////////////////////////// Y ahora me olvido porque yo ya le he enviado los datos al trabajador, y ya si eso el trabajador me dirá algo
+          trabajador.onmessage = function(misdatos){            // Cuando el trabajador finaliza me devuelve un mensaje
+            for(let i = 0;i<datos1.data.length;i++){              // tomo el array de datos que me da el worker
+              datos1.data[i] = misdatos.data[i]                 // Lo vuelco al array de datos de la imagen porque yo lo que quiero al final es una imagen
+            }
+            contexto.putImageData(datos1,x-64,0)                   // Esa imagen que he construido con los datos que me da el worker, pues la pongo en el canvas         
+           }
+           x+=bucket;
+           setTimeout(function(){
+               trabajaMucho()
+           },1000)
+          
+        }
+    </script>
+  </body>
+</html>

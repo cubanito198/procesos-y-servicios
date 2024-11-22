@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+	<head>
+	
+	</head>
+	<body>	<input>
+		<script>
+			var entrada = document.querySelector("input")                       // Atrapamos la entrada
+			entrada.onchange = function(){                                      // Cuando la entrada cambie (fuerzo un evento)
+				console.log("Ok te has identificado como",this.value)             // Comprobamos que atrapamos la info del usuario
+				
+				///////////////// CLIENTE ---------> SERVIDOR ///////////////////////////////////////////////////////
+				
+				fetch("008.php?usuario="+encodeURI(this.value))                   // realizo una peticion asincrónica
+				.then(function(response){                                         // Cuando reciba la respuesta
+					return response.text()                                          // Hoy la quiero procesar como texto
+				})
+				.then(function(datos){                                            // Cuando esa conversión se haya realizado
+				///////////////// CLIENTE <---------- SERVIDOR //////////////////////////////////////////////////
+					console.log(datos)                                              // Pongo los datos en consola solo para comprobar que me llegan
+					let conjunto = JSON.parse(datos)                                // Convierto los datos de string a array
+					console.log(conjunto)                                           // Lo pongo en console como debug para comprobar que todo va ok
+					let suma = 0;                                                   // Creo una suma inicial
+					for(let i = 0;i<conjunto.length;i++){                           // Recorro el array
+						suma += conjunto[i]                                           // Y al valor anterior le sumo lo que valga ese elemento del array
+					}
+					///////////////// CLIENTE ---------> SERVIDOR //////////////////////////////////////////////////
+					fetch("008-resultado.php?resultado="+suma)                      // Y al final le devuelvo al servidor el resultado de la operacion
+				})
+			}
+		</script>
+	</body>
+</html>

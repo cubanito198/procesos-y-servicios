@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+  <head>
+  </head>
+  <body>
+    <main>
+      <section></section>
+      <input id="mensaje">
+    </main>
+    <script>
+      ///////////////////////////////// BUCLE DE LECTURA ///////////////////////////////////////
+      function bucle(){                                                                 // Defino una funcion de bucle
+        fetch("http://192.168.1.225:5000/dame")                                         // Realizo una peticion de recepcion
+        .then(function(response){
+          return response.json()                                                         // Convierto la respuesta a json
+        })
+        .then(function(datos){                                                          // Cuando reciba los datos
+          let seccion = document.querySelector("section")                               // Selecciono el contenedor de destino
+          seccion.innerHTML = ""                                                        // Vacío el contenedor
+          datos.forEach(function(dato){                                                 // PAra cada uno de los datos que haya venido
+            let bloque = document.createElement("article")
+            bloque.textContent = dato.mensaje
+            seccion.appendChild(bloque)
+            
+          })
+        })
+        clearTimeout(temporizador)                                                      // Detengo el temporizador
+        temporizador = setTimeout("bucle()",1000)                                       // Vuelvo a arrancar el bucle dentro de un segundo
+      }
+      ///////////////////////////////// ENVÍO DE MENSAJES ///////////////////////////////////////
+      let entrada = document.querySelector("input")                                     // Selecciono la entrada
+      entrada.onchange = function(){                                                    // Cuando cambie la entrada
+        fetch("http://192.168.1.225:5000/toma?mensaje="+encodeURI(this.value))          // Realizo una peticion de envio
+      }
+      ///////////////////////////////// PONGO EL BUCLE EN MARCHA ///////////////////////////////////////
+      var temporizador = setTimeout("bucle()",1000)                                     // Lanzo una primera ejecución del bucle                                 
+    </script>
+  </body>
+</html>

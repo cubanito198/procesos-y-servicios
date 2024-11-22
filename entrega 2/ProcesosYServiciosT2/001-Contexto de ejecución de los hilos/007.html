@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+	<head>
+	
+	</head>
+	<body>	<input>
+		<script>
+			var entrada = document.querySelector("input")
+			entrada.onchange = function(){
+				console.log("Ok te has identificado como",this.value)
+				fetch("007.php?usuario="+encodeURI(this.value))
+				.then(function(response){
+					return response.text()
+				})
+				.then(function(datos){
+					console.log(datos)
+					let conjunto = JSON.parse(datos)
+					console.log(conjunto)
+					let suma = 0;
+					for(let i = 0;i<conjunto.length;i++){
+						suma += conjunto[i]
+					}
+					console.log(suma)
+				})
+			}
+		</script>
+	</body>
+</html>

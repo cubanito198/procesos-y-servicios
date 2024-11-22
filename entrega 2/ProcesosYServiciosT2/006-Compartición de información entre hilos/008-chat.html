@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+  <head>
+  </head>
+  <body>
+    <main>
+      <section></section>
+      <input id="mensaje">
+    </main>
+    <script>
+      function bucle(){
+        fetch("http://192.168.1.225:5000/dame")
+        .then(function(response){
+          return response.json()
+        })
+        .then(function(datos){
+          console.log(datos)
+        })
+        clearTimeout(temporizador)
+        temporizador = setTimeout("bucle()",1000)
+      }
+      
+      var temporizador = setTimeout("bucle()",1000)
+    </script>
+  </body>
+</html>

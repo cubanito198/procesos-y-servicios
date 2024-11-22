@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+	<head>
+	
+	</head>
+	<body>	<input>
+		<script>
+			var entrada = document.querySelector("input")
+			entrada.onchange = function(){
+				console.log("Ok te has identificado como",this.value)
+				fetch("004.php")
+				.then(function(response){
+					return response.text()
+				})
+				.then(function(datos){
+					console.log("Te ha tocado la tarea:")
+					console.log(datos)
+					
+				})
+			}
+		</script>
+	</body>
+</html>

@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+  <body>
+    <canvas id="lienzo1"></canvas>
+    <script>
+        const tiempoinicio = new Date()
+        const epochinicio = tiempoinicio.getTime()
+        const lienzo = document.querySelector("#lienzo1")       // Selecciono el lienzo
+        lienzo.width = 6000                                     // Le pongo 6000 pixeles de anchura
+        lienzo.height = 4000                                    // Le pongo 4000 pixeles de altura
+        const contexto = lienzo.getContext("2d", { willReadFrequently: true });
+              // Creo un contexto para dibujar en 2d
+        var imagen = new Image()                                // Creo una nueva imagen
+        imagen.src = "foto.JPG";                                // Le pongo una imagen real
+        imagen.onload = function(){                             // Solo cuando esa imagen haya cargado en memoria
+          contexto.drawImage(imagen,0,0)                        // Pinto la imagen
+          
+          var datos;
+          ///////////////////////////////////////////////////////////////////
+          datos1 = contexto.getImageData(0,0,6000,1000)        // Leo la primera cuarta parte en vertical de la imagen de la imagen (cargo  con una cuarta parte de lo que cargaba antes)
+          var trabajador = new Worker("009-worker.js");         // Creo una nueva instancia de un worker y lo pongo en el identificador llamado trabajador
+          trabajador.postMessage(datos1.data)                   // tomo los datos y se los envío al worker
+          ///////////////////////////////////////////////////// Y ahora me olvido porque yo ya le he enviado los datos al trabajador, y ya si eso el trabajador me dirá algo
+          trabajador.onmessage = function(misdatos){            // Cuando el trabajador finaliza me devuelve un mensaje
+            for(let i = 0;i<datos1.data.length;i++){              // tomo el array de datos que me da el worker
+              datos1.data[i] = misdatos.data[i]                 // Lo vuelco al array de datos de la imagen porque yo lo que quiero al final es una imagen
+            }
+            contexto.putImageData(datos1,0,0)                   // Esa imagen que he construido con los datos que me da el worker, pues la pongo en el canvas         
+           }
+          ///////////////////////////////////////////////////////////////////
+          datos2 = contexto.getImageData(0,1000,6000,2000)      
+          var trabajador2 = new Worker("009-worker.js");
+          trabajador2.postMessage(datos2.data)
+          trabajador2.onmessage = function(misdatos){
+            for(let i = 0;i<datos2.data.length;i++){
+              datos2.data[i] = misdatos.data[i]
+            }
+            contexto.putImageData(datos2,0,1000)                      
+          }
+          ///////////////////////////////////////////////////////////////////
+          datos3 = contexto.getImageData(0,2000,6000,3000)      
+          var trabajador3 = new Worker("009-worker.js");
+          trabajador3.postMessage(datos3.data)
+          trabajador3.onmessage = function(misdatos){
+            for(let i = 0;i<datos3.data.length;i++){
+              datos3.data[i] = misdatos.data[i]
+            }
+            contexto.putImageData(datos3,0,2000)                      
+          }
+          ///////////////////////////////////////////////////////////////////
+          datos4 = contexto.getImageData(0,3000,6000,4000)     
+          var trabajador4 = new Worker("009-worker.js");
+          trabajador4.postMessage(datos3.data)
+          trabajador4.onmessage = function(misdatos){
+            for(let i = 0;i<datos4.data.length;i++){
+              datos4.data[i] = misdatos.data[i]
+            }
+            contexto.putImageData(datos4,0,2000)                      
+          }
+            
+            
+            const tiempofinal = new Date()
+            const epochfinal = tiempofinal.getTime()
+            const resta = epochfinal - epochinicio;
+            console.log("Esta operacion tarda en hacerse",resta,"milisegundos")
+         
+          
+        }
+    </script>
+  </body>
+</html>

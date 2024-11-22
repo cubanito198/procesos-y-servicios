@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+  <head>
+  </head>
+  <body>
+    <main>
+      <section></section>
+      <input id="mensaje">
+    </main>
+    <script>
+      function bucle(){
+        
+        clearTimeout(temporizador)
+        temporizador = setTimeout("bucle()",1000)
+      }
+      
+      var temporizador = setTimeout("bucle()",1000)
+    </script>
+  </body>
+</html>

@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+  <body>
+    <script>
+      
+      let inicio = new Date();              // Nueva instancia del objeto Date
+      let epochinicio = inicio.getTime();   // Quiero saber el epoch desde 1 de enero 70
+      
+      let numero = 1.0000000054;            // Creo un número cercano a uno
+      let iteraciones = 10000000000;         // Define el numero de iteraciones de cálculo
+      for(let i = 0;i<iteraciones;i++){     // Arranco  un bucle for
+        numero *= 1.000000000076;           // Realizo una multiplicación 
+      }
+      
+      let final = new Date();             // Nueva instancia de Date
+      let epochfinal = final.getTime();   // Saco el epoch del final del programa
+      let resta = epochfinal - epochinicio; // Resto el final menos el inicio para saber la diferencia
+      console.log("La diferencia de tiempo ha sido de ",resta); // Mensaje por consola
+      
+    </script>
+  </body>
+</html>

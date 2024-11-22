@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+	<head>
+	
+	</head>
+	<body>	<input>
+		<script>
+			var entrada = document.querySelector("input")
+			entrada.onchange = function(){
+				console.log("Ok te has identificado como",this.value)
+				fetch("003.php?usuario="+encodeURI(this.value))
+			}
+		</script>
+	</body>
+</html>

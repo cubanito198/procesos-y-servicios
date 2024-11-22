@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+  <head>
+    <style>
+      section{
+        width:400px;
+        height:800px;
+        border:1px solid grey;
+        overflow-y:scroll;
+      }
+      article{
+        box-sizing:border-box;
+        padding:20px;
+        background:lightgreen;
+        border-radius:0px 10px 10px 10px;
+        margin:10px;
+        width:80%;
+        box-shadow:0px 2px 4px rgba(0,0,0,0.3);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section></section>
+      <input id="mensaje">
+    </main>
+    <script>
+      ///////////////////////////////// BUCLE DE LECTURA ///////////////////////////////////////
+      function bucle(){                                                                 // Defino una funcion de bucle
+        fetch("http://192.168.1.225:5000/dame")                                         // Realizo una peticion de recepcion
+        .then(function(response){
+          return response.json()                                                         // Convierto la respuesta a json
+        })
+        .then(function(datos){                                                          // Cuando reciba los datos
+          let seccion = document.querySelector("section")                               // Selecciono el contenedor de destino
+          seccion.innerHTML = ""                                                        // Vacío el contenedor
+          datos.forEach(function(dato){                                                 // PAra cada uno de los datos que haya venido
+            let bloque = document.createElement("article")
+            bloque.textContent = dato.mensaje
+            seccion.appendChild(bloque)
+            
+          })
+          seccion.scrollTop = 100000000000
+        })
+        clearTimeout(temporizador)                                                      // Detengo el temporizador
+        temporizador = setTimeout("bucle()",1000)                                       // Vuelvo a arrancar el bucle dentro de un segundo
+      }
+      ///////////////////////////////// ENVÍO DE MENSAJES ///////////////////////////////////////
+      let entrada = document.querySelector("input")                                     // Selecciono la entrada
+      entrada.onchange = function(){                                                    // Cuando cambie la entrada
+        fetch("http://192.168.1.225:5000/toma?mensaje="+encodeURI(this.value))          // Realizo una peticion de envio
+        this.value = ""                                                                // Vacío la entrada para que el usuario pueda seguir escribiendo
+      }
+      ///////////////////////////////// PONGO EL BUCLE EN MARCHA ///////////////////////////////////////
+      var temporizador = setTimeout("bucle()",1000)                                     // Lanzo una primera ejecución del bucle                                 
+    </script>
+  </body>
+</html>
