@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <title>Chat en Vivo</title>
+    <style>
+      /* Estilo general del cuerpo */
+      body {
+        font-family: 'Arial', sans-serif;
+        background-color: #6200ff;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      /* Estilo del contenedor principal */
+      main {
+        width: 360px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Estilo de los inputs */
+      input {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin: 10px;
+        font-size: 14px;
+        width: calc(100% - 22px); /* Para ajustar el padding */
+        box-sizing: border-box;
+      }
+
+      /* Estilo de la sección de mensajes */
+      section {
+        flex-grow: 1;
+        padding: 10px;
+        overflow-y: auto;
+        height: 350px;
+        background-color: #f9f9f9;
+        border-bottom: 1px solid #ddd;
+      }
+
+      /* Estilo de cada mensaje */
+      article {
+        background: #e0ffe0;
+        border-radius: 8px;
+        padding: 10px;
+        margin: 5px 0;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        max-width: 80%;
+      }
+
+      /* Estilo del autor del mensaje */
+      article h3 {
+        font-size: 14px;
+        margin: 0;
+        color: #333;
+      }
+
+      /* Estilo del contenido del mensaje */
+      article p {
+        font-size: 16px;
+        margin: 5px 0 0;
+        color: #555;
+      }
+
+      /* Estilo para la zona de mensajes del usuario */
+      input#mensaje {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 10px;
+        margin: 10px;
+        font-size: 16px;
+        height: 60px;
+        resize: none;
+        box-sizing: border-box;
+      }
+
+      /* Estilo para los mensajes de usuario */
+      .mi-mensaje {
+        background: #d4e5ff;
+        align-self: flex-end;
+      }
+
+      /* Estilo para el título de la ventana de chat */
+      header {
+        background-color: #5c6bc0;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        font-size: 18px;
+      }
+
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>Chat en Vivo</header>
+      <input id="usuario" placeholder="Introduce tu usuario">
+      <section></section>
+      <textarea id="mensaje" placeholder="Escribe un mensaje..."></textarea>
+    </main>
+
+    <script>
+      ///////////////////////////////// BUCLE DE LECTURA ///////////////////////////////////////
+      function bucle() {
+        fetch("http://192.168.1.225:5000/dame")
+          .then(function(response) {
+            return response.json();
+          })
+          .then(function(datos) {
+            let seccion = document.querySelector("section");
+            seccion.innerHTML = ""; // Vacío el contenedor
+
+            // Para cada uno de los datos que haya venido
+            datos.forEach(function(dato) {
+              let bloque = document.createElement("article");
+              let autor = document.createElement("h3");
+              autor.textContent = dato.usuario;
+
+              let parrafo = document.createElement("p");
+              parrafo.textContent = dato.mensaje;
+
+              bloque.appendChild(autor);
+              bloque.appendChild(parrafo);
+              seccion.appendChild(bloque);
+            });
+
+            // Hacer scroll hacia el final
+            seccion.scrollTop = seccion.scrollHeight;
+          });
+        clearTimeout(temporizador);
+        temporizador = setTimeout("bucle()", 1000);
+      }
+
+      ///////////////////////////////// ENVÍO DE MENSAJES ///////////////////////////////////////
+      let entrada = document.querySelector("#mensaje");
+      let usuario = document.querySelector("#usuario");
+
+      entrada.onchange = function() {
+        fetch("http://192.168.1.225:5000/toma?mensaje=" + encodeURI(this.value) + "&usuario=" + encodeURI(usuario.value))
+          .then(response => response.json())
+          .then(datos => {
+            // Limpiar el campo de entrada
+            entrada.value = "";
+          });
+      }
+
+      ///////////////////////////////// PONGO EL BUCLE EN MARCHA ///////////////////////////////////////
+      var temporizador = setTimeout("bucle()", 1000);
+    </script>
+  </body>
+</html>

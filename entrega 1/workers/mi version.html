@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canvas Interactivo</title>
+  <style>
+    /* Reset de márgenes y padding */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Fondo de la página */
+    body {
+      background-color: #f4f4f9;
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    /* Contenedor principal */
+    #contienecanvas {
+      position: relative;
+      width: 1024px;
+      height: 1024px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    /* Estilos de los lienzos */
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    /* Estilos del botón */
+    #comenzar {
+      background-color: #007bff;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-bottom: 10px;
+      transition: background-color 0.3s ease;
+    }
+
+    #comenzar:hover {
+      background-color: #0056b3;
+    }
+
+    /* Estilos del selector de tamaño */
+    #tamanio {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      margin-left: 10px;
+      transition: border-color 0.3s ease;
+    }
+
+    #tamanio:focus {
+      border-color: #007bff;
+      outline: none;
+    }
+
+    /* Contenedor de controles */
+    .controls {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="controls">
+    <button id="comenzar">Comenzar</button>
+    <select id="tamanio">
+      <option value="4">4</option>
+      <option value="8">8</option>
+      <option value="16">16</option>
+      <option value="32">32</option>
+      <option value="64">64</option>
+      <option value="128">128</option>
+      <option value="256">256</option>
+    </select>
+  </div>
+
+  <div id="contienecanvas">
+    <canvas id="lienzo1"></canvas>
+    <canvas id="lienzo2"></canvas>
+  </div>
+
+  <script>
+    /*/////////////////////////////// DECLARACIÓN DE VARIABLES GLOBALES ////////////////////////////////////*/
+
+    var x;  // Variable global para la coordenada x
+    var y;  // Variable global para la coordenada y
+    var bucket; // Variable para el tamaño del bloque
+
+    /*/////////////////////////////// DECLARACIÓN DE LIENZO Y PROPIEDADES INICIALES DE IMAGEN ////////////////////////////////////*/
+
+    const lienzo = document.querySelector("#lienzo1"); // Lienzo 1
+    lienzo.width = 1024; // Ancho de lienzo
+    lienzo.height = 1024; // Alto de lienzo
+    const contexto = lienzo.getContext("2d"); // Contexto 2d para lienzo
+
+    const lienzo2 = document.querySelector("#lienzo2"); // Lienzo 2
+    lienzo2.width = 1024;
+    lienzo2.height = 1024;
+    const contexto2 = lienzo2.getContext("2d"); // Contexto 2d para lienzo2
+
+    var imagen = new Image(); // Nueva imagen
+    imagen.src = "imagenoriginal.jpg"; // Aquí es donde necesitas la ruta correcta
+    imagen.onload = function() { // Cuando la imagen haya cargado
+      contexto.drawImage(imagen, 0, 0); // Dibujar la imagen
+
+      x = 0; // Coordenada x inicial
+      y = 0; // Coordenada y inicial
+    };
+
+    document.getElementById("comenzar").onclick = function() {
+      bucket = parseInt(document.getElementById("tamanio").value); // Obtener el tamaño del bloque
+      trabajaMucho(); // Iniciar el proceso de trabajo
+    };
+
+    /*/////////////////////////////// DECLARACIÓN DE LIENZO Y PROPIEDADES INICIALES DE IMAGEN ////////////////////////////////////*/
+
+    function trabajaMucho() {
+      contexto2.clearRect(0, 0, 1024, 1024); // Limpiar lienzo2
+      contexto2.strokeStyle = "red"; // Color del borde
+      contexto2.lineWidth = 6; // Grosor del borde
+      contexto2.beginPath();
+      contexto2.strokeRect(x, y, bucket, bucket); // Dibujar rectángulo rojo
+      contexto2.stroke();
+
+      // Obtener los datos de la imagen
+      datos1 = contexto.getImageData(x, y, bucket, bucket);
+      var trabajador = new Worker("013-worker.js"); // Crear un worker
+      trabajador.postMessage(datos1.data); // Enviar datos al worker
+
+      trabajador.onmessage = function(misdatos) {
+        // Cuando el worker finalice el procesamiento
+        for (let i = 0; i < datos1.data.length; i++) {
+          datos1.data[i] = misdatos.data[i]; // Volcar los datos al array
+        }
+        contexto.putImageData(datos1, x - bucket, y); // Actualizar la imagen en el lienzo
+      };
+
+      x += bucket; // Avanzar en la coordenada x
+      if (x > 1024) { // Si llegamos al final de x
+        x = 0; // Volver a la izquierda
+        y += bucket; // Avanzar hacia abajo en y
+      }
+
+      if (x < 1024 && y < 1024) { // Si no hemos llegado al final de la imagen
+        setTimeout(function() {
+          trabajaMucho(); // Llamada recursiva
+        }, 100); // Esperar 100ms antes de continuar
+      }
+    }
+  </script>
+</body>
+</html>
