@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Procesamiento de Datos</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: rgb(255, 179, 0);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 2px solid #007BFF;
+            border-radius: 5px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #0056b3;
+        }
+
+        .result {
+            margin-top: 1.5rem;
+            font-size: 1.2rem;
+            color: #333;
+        }
+
+        .title {
+            color: #007BFF;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Procesar Entrada</div>
+        <input type="text" placeholder="Ingresa tu nombre">
+        <div class="result" id="resultado"></div>
+    </div>
+
+    <script>
+        const entrada = document.querySelector("input");
+        const resultadoDiv = document.getElementById("resultado");
+
+        entrada.onchange = function() {
+            const usuario = this.value;
+            console.log("Ok, te has identificado como", usuario);
+
+            // Cliente → Servidor: Envía la entrada
+            fetch("008.php?usuario=" + encodeURI(usuario))
+                .then(response => response.text()) // Procesar la respuesta como texto
+                .then(datos => {
+                    console.log("Datos recibidos:", datos);
+
+                    const conjunto = JSON.parse(datos); // Convertir a objeto/array
+                    console.log("Array convertido:", conjunto);
+
+                    // Calcular la suma de los elementos del array
+                    const suma = conjunto.reduce((acc, val) => acc + val, 0);
+                    resultadoDiv.textContent = `La suma es: ${suma}`;
+
+                    // Cliente → Servidor: Envía el resultado
+                    fetch("008-resultado.php?resultado=" + suma)
+                        .then(() => console.log("Resultado enviado al servidor:", suma));
+                })
+                .catch(error => {
+                    console.error("Error en la petición:", error);
+                    resultadoDiv.textContent = "Error en la operación.";
+                });
+        };
+    </script>
+</body>
+</html>
+
