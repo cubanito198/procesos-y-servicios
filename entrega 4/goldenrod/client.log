@@ -1,0 +1,1 @@
+2025-02-20 23:34:50,001 - ERROR - Error de conexión: 'SecureTCPClient' object has no attribute 'context'
