@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ejemplo de Diagrama Sankey</title>
+  <!-- Se incluye el CSS definitivo -->
+  <link rel="stylesheet" href="sankey_flow.css">
+</head>
+<body>
+  <!-- Contenedor donde se renderizará el diagrama Sankey -->
+  <div id="chart-container" class="sankey-flow-container"></div>
+
+  <!-- Se incluye el archivo JavaScript definitivo -->
+  <script src="sankey_flow.js"></script>
+  <script>
+    // Datos de ejemplo para el diagrama Sankey
+    const data = {
+      "nodes": [
+        { "name": "Empleado 1", "color": "#1f77b4" },
+        { "name": "Empleado 2" },         // Se asignará un color aleatorio
+        { "name": "Empleado 3", "color": "#ff7f0e" },
+        { "name": "Empleado 4" },         // Se asignará un color aleatorio
+        { "name": "Cafeteria", "color": "#2ca02c" },
+        { "name": "Cuarto de baño", "color": "#d62728" }
+      ],
+      "links": [
+        { "source": 0, "target": 5, "value": 1 },
+        { "source": 1, "target": 4, "value": 80 },
+        { "source": 2, "target": 4, "value": 19 },
+        { "source": 3, "target": 5, "value": 24 }
+      ]
+    };
+
+    // Inicializar y renderizar el diagrama Sankey
+    SankeyFlow.createSankeyChart({
+      element: '#chart-container',
+      data: data,
+      width: 600,
+      height: 800,
+      nodeWidth: 120,
+      nodePadding: 10,
+      minNodeHeight: 20,    // Configuración de altura mínima de nodos
+      exportButton: true    // Se añade el botón para exportar a PNG
+    });
+  </script>
+</body>
+</html>

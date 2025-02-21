@@ -1,0 +1,109 @@
+/* 
+  SankeyFlow Rally CSS - Estilos inspirados en los rallyes
+  ----------------------------------------------------------------------------
+  - Colores vibrantes inspirados en liverys de coches de rally
+  - Efectos dinámicos para dar sensación de velocidad
+  - Diseñado para un look agresivo y moderno
+*/
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Contenedor general */
+.sankey-flow-container {
+  position: relative;
+  background: linear-gradient(45deg, #1e1e1e, #3b3b3b); /* Fondo oscuro tipo asfalto */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 15px rgba(255, 0, 0, 0.3); /* Efecto neón rojo */
+}
+
+/* Estilos para el SVG del diagrama */
+.sankey-flow-svg {
+  display: block;
+  margin: 0 auto;
+  background: radial-gradient(circle, #222, #111); /* Oscuro con centro iluminado */
+  border: 2px solid #ffcc00; /* Inspirado en los colores del WRC */
+}
+
+/* Estilos para los enlaces */
+.sankey-flow-link {
+  stroke-opacity: 0.8;
+  transition: stroke-width 0.3s ease, opacity 0.3s ease;
+  cursor: pointer;
+}
+
+.sankey-flow-link:hover {
+  stroke-opacity: 1;
+  stroke-width: 3px;
+  filter: drop-shadow(0px 0px 5px rgba(255, 255, 255, 0.7)); /* Brillo al pasar el ratón */
+}
+
+/* Estilos para los nodos */
+.sankey-flow-node {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.sankey-flow-node:hover {
+  transform: scale(1.05);
+}
+
+/* Estilos para los rectángulos de los nodos */
+.sankey-flow-node rect {
+  transition: filter 0.3s ease;
+  stroke: #ffcc00;
+  stroke-width: 2px;
+  fill: linear-gradient(90deg, #ff0000, #ff8800); /* Rojo-naranja como colores de velocidad */
+}
+
+.sankey-flow-node:hover rect {
+  filter: brightness(1.3);
+}
+
+/* Estilos para el texto de los nodos */
+.sankey-flow-text {
+  font-family: 'Arial Black', sans-serif;
+  font-size: 14px;
+  fill: #fff;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.8);
+}
+
+/* Estilos para el tooltip */
+.tooltip {
+  position: absolute;
+  background: rgba(255, 0, 0, 0.9);
+  color: white;
+  padding: 8px;
+  border-radius: 4px;
+  pointer-events: none;
+  display: none;
+  font-family: 'Arial Black', sans-serif;
+  font-size: 12px;
+  text-transform: uppercase;
+  box-shadow: 0px 0px 10px rgba(255, 0, 0, 0.8);
+}
+
+/* Botón de exportación estilo rally */
+.sankey-flow-export-btn {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background: linear-gradient(45deg, #ff0000, #ffcc00);
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  font-family: 'Arial Black', sans-serif;
+  font-size: 14px;
+  text-transform: uppercase;
+  box-shadow: 0px 4px 10px rgba(255, 0, 0, 0.5);
+}
+
+.sankey-flow-export-btn:hover {
+  background: linear-gradient(45deg, #ffcc00, #ff0000);
+  transform: scale(1.1);
+}
