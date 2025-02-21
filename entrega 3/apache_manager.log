@@ -1,0 +1,18 @@
+2025-02-20 18:59:40,268 - INFO - Deteniendo Apache...
+2025-02-20 18:59:41,236 - ERROR - Fallo al detener Apache: Error 1: Stop-Service : No se puede detener el servicio 'Apache2.4 (Apache2.4)' debido al error siguiente: No se puede abrir el 
+servicio Apache2.4 en el equipo '.'.
+En l¡nea: 1 Car cter: 1
++ Stop-Service -Name 'Apache2.4' -Force
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : CloseError: (System.ServiceProcess.ServiceController:ServiceController) [Stop-Service], ServiceC 
+   ommandException
+    + FullyQualifiedErrorId : CouldNotStopService,Microsoft.PowerShell.Commands.StopServiceCommand
+2025-02-20 19:01:41,155 - INFO - Deteniendo Apache...
+2025-02-20 19:01:42,037 - ERROR - Fallo al detener Apache: Error 1: Stop-Service : No se puede detener el servicio 'Apache2.4 (Apache2.4)' debido al error siguiente: No se puede 
+abrir el servicio Apache2.4 en el equipo '.'.
+En l¡nea: 1 Car cter: 1
++ Stop-Service -Name 'Apache2.4' -Force
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : CloseError: (System.ServiceProcess.ServiceController:ServiceController) [Stop-Se 
+   rvice], ServiceCommandException
+    + FullyQualifiedErrorId : CouldNotStopService,Microsoft.PowerShell.Commands.StopServiceCommand

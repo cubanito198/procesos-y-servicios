@@ -1,0 +1,2 @@
+2025-02-21 11:53:31,185 - INFO - Iniciando cancelar (tiempo: 30s)
+2025-02-21 11:53:31,243 - ERROR - Fallo en cancelar: Error 1116: No se puede anular el apagado del sistema porque no se estaba apagando.(1116)
