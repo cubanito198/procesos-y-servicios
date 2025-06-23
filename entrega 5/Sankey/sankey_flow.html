@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SankeyFlow Pro - Diagrama Sankey Avanzado</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="main-container">
+    <div class="header">
+      <h1>SankeyFlow Pro</h1>
+      <p>Diagramas Sankey interactivos de nueva generación</p>
+      <div class="header-accent"></div>
+    </div>
+
+    <div class="controls">
+      <div class="control-group">
+        <label>Ancho del nodo</label>
+        <input type="range" id="nodeWidth" min="15" max="40" value="25" class="input-field">
+      </div>
+      <div class="control-group">
+        <label>Espaciado</label>
+        <input type="range" id="nodePadding" min="5" max="30" value="15" class="input-field">
+      </div>
+      <div class="control-group">
+        <label>Animación</label>
+        <button id="toggleAnimation" class="btn">Activar</button>
+      </div>
+      <button id="exportPNG" class="btn">📸 Exportar PNG</button>
+      <button id="exportSVG" class="btn">📄 Exportar SVG</button>
+      <button id="randomizeData" class="btn">🎲 Datos aleatorios</button>
+      <button id="createCustom" class="btn">✏️ Crear gráfica</button>
+    </div>
+
+    <div class="chart-container" id="chartContainer">
+      <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p>Generando diagrama...</p>
+      </div>
+      
+      <div class="zoom-controls">
+        <button class="zoom-btn" id="zoomIn">+</button>
+        <button class="zoom-btn" id="zoomOut">−</button>
+        <button class="zoom-btn" id="resetZoom">⌂</button>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-value" id="nodeCount">0</div>
+        <div class="stat-label">Nodos</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="linkCount">0</div>
+        <div class="stat-label">Enlaces</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="totalFlow">0</div>
+        <div class="stat-label">Flujo Total</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="efficiency">0%</div>
+        <div class="stat-label">Eficiencia</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tooltip" id="tooltip"></div>
+
+  <!-- Modal para crear gráficas personalizadas -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Crear Gráfica Personalizada</h3>
+        <button class="modal-close" id="modalClose">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="input-section">
+          <label>Nodos (uno por línea)</label>
+          <textarea id="nodesInput" placeholder="Fuente A
+Fuente B
+Proceso Central
+Destino X
+Destino Y"></textarea>
+          <div class="input-hint">Define cada nodo que aparecerá en tu diagrama</div>
+        </div>
+        <div class="input-section">
+          <label>Enlaces (formato: origen,destino,valor)</label>
+          <textarea id="linksInput" placeholder="Fuente A,Proceso Central,150
+Fuente B,Proceso Central,120
+Proceso Central,Destino X,140
+Proceso Central,Destino Y,130"></textarea>
+          <div class="input-hint">Conecta los nodos especificando el flujo entre ellos</div>
+        </div>
+        <div class="modal-actions">
+          <button id="cancelCustom" class="btn">Cancelar</button>
+          <button id="createFromData" class="btn">Crear Gráfica</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
