@@ -1,0 +1,11 @@
+{
+  "email_config": {
+    "sender": "",
+    "password": "",
+    "receiver": "",
+    "smtp_server": "smtp.gmail.com",
+    "smtp_port": 587
+  },
+  "interval": 1.0,
+  "alert_threshold": 15.0
+}
